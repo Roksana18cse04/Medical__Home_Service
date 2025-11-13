@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import EmailStr
 import random
+import jwt
 from fastapi import APIRouter, HTTPException, Depends, Header
 
 
@@ -11,10 +12,14 @@ from app.services.auth_service import (
     verify_password,
     create_access_token,
     delete_account,
-    decode_access_token
+    decode_access_token,
+    get_doctor_info_by_id,
+    get_patient_info_by_id,
+    get_user_info_by_token
 )
 from app.services.email_service import send_verification_email_Doctor
-from app.DataBase import doctors_col, doctor_specialists_col
+from app.DataBase import doctors_col, doctor_specialists_col, patients_col
+from bson import ObjectId
 
 router = APIRouter(prefix="/auth", tags=["DoctorAuth"])
 
@@ -59,6 +64,8 @@ def verify_doctor(email: EmailStr, otp: str):
     info = doctor["specialist_info"]
     doctor_specialists_col.insert_one({
         "type": doctor["type"],
+        "email": email,
+        "name": doctor["name"],
         "specialist": info["specialist"],
         "sub_specialist": info["sub_specialist"],
         "doctor_id": str(doctor["_id"])
@@ -107,6 +114,66 @@ def delete_my_account(
         raise HTTPException(status_code=404, detail=result["error"])
 
     return {"message": f"{role.capitalize()} account and related data deleted successfully"}
+# ----------------- Get User Info by Token -----------------
+@router.get("/user/profile")
+def get_user_profile(current_user: dict = Depends(get_current_user)):
+    """Get current user's name and email using access token"""
+    user_id = current_user["user_id"]
+    role = current_user["role"]
+    
+    if role == "doctor":
+        user = doctors_col.find_one({"_id": ObjectId(user_id)}, {"name": 1, "email": 1, "phone": 1})
+    elif role == "patient":
+        user = patients_col.find_one({"_id": ObjectId(user_id)}, {"name": 1, "email": 1, "phone": 1})
+    else:
+        raise HTTPException(status_code=400, detail="Invalid role")
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "user_id": user_id,
+        "name": user["name"],
+        "email": user["email"],
+        "phone": user["phone"],
+        "role": role
+    }
+
+@router.get("/doctor/info/{doctor_id}")
+def get_doctor_info(doctor_id: str):
+    """Get doctor's name and email by doctor ID"""
+    try:
+        doctor = doctors_col.find_one({"_id": ObjectId(doctor_id)}, {"name": 1, "email": 1, "phone": 1, "specialist_info": 1})
+        if not doctor:
+            raise HTTPException(status_code=404, detail="Doctor not found")
+        
+        return {
+            "doctor_id": doctor_id,
+            "name": doctor["name"],
+            "email": doctor["email"],
+            "phone": doctor["phone"],
+            "specialist": doctor["specialist_info"]["specialist"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid doctor ID: {str(e)}")
+
+@router.get("/patient/info/{patient_id}")
+def get_patient_info(patient_id: str):
+    """Get patient's name and email by patient ID"""
+    try:
+        patient = patients_col.find_one({"_id": ObjectId(patient_id)}, {"name": 1, "email": 1, "phone": 1})
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found")
+        
+        return {
+            "patient_id": patient_id,
+            "name": patient["name"],
+            "email": patient["email"],
+            "phone": patient["phone"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid patient ID: {str(e)}")
+
 # ----------------- Get All Specialists -----------------
 @router.get("/doctor/specialists")
 def get_all_specialists():

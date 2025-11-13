@@ -20,7 +20,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(auth_patient_router)
 
-# app.include_router(audio_router,)  # attach MY audio_stream endpoint
+app.include_router(audio_router)  # attach MY audio_stream endpoint
 
 # ✅ Root GET route
 @app.get("/")

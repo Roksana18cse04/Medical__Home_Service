@@ -7,6 +7,7 @@ load_dotenv(override=True)
 
 MONGO_URL = os.getenv("MONGO_URL")
 print(MONGO_URL)
+
 DB_NAME = os.getenv("DB_NAME")
 
 SECRET_KEY = os.getenv("SECRET_KEY")

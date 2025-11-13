@@ -3,6 +3,7 @@ import json
 import google.generativeai as genai
 from app.core.config import GEMINI_API_KEY
 from app.schemas.diseases import User_SymptomsRequest
+from app.services.matcher import get_doctor_by_semantic_specialist
 from app.DataBase import doctor_specialists_col
 
 # ------------------- Rate-limiting setup -------------------
@@ -20,10 +21,7 @@ total_daily_limit = int(sum(models_rpd.values()) * UTILIZATION_RATIO)
 requests_done = {model: 0 for model in models_rpd}
 total_requests = 0
 
-print(f"Dynamic total daily limit set to: {total_daily_limit} requests/day (at {UTILIZATION_RATIO*100}% utilization)\n")
-
 genai.configure(api_key=GEMINI_API_KEY)
-
 
 # ------------------- Helper Functions -------------------
 def clean_model_json(raw_text: str) -> str:
@@ -41,40 +39,11 @@ def parse_safe_json(text: str):
         print("JSON Parse Error:", e)
         return {"error": "Invalid JSON format", "raw_output": text}
 
-def match_specialist_db(ai_specialist: str):
-    """
-    Match AI recommended specialist to DB entry.
-    Returns the specialist document from DB if found.
-    """
-    ai_lower = ai_specialist.lower()
-    db_specs = list(doctor_specialists_col.find({}, {"_id": 0}))
-    
-    for spec in db_specs:
-        spec_name_lower = spec["specialist"].lower()
-        sub_spec_lower = spec.get("sub_specialist", "").lower()
-        
-        if "cardio" in ai_lower and "heart" in spec_name_lower:
-            return spec
-        elif "pulmon" in ai_lower and "medicine" in spec["type"].lower():
-            return spec
-        elif "general" in ai_lower and "medicine" in spec["type"].lower():
-            return spec
-    return None
-
-def attach_db_specialist(ai_diagnosis: list):
-    """
-    Attach matched DB specialist info to each AI diagnosis entry.
-    """
-    for entry in ai_diagnosis:
-        matched_doc = match_specialist_db(entry.get("recommended_specialist", ""))
-        entry["matched_doctor"] = matched_doc
-    return ai_diagnosis
-
 # ------------------- Main Function -------------------
 def diseases_Recognize(data: User_SymptomsRequest, model_preference="gemma-3n-e2b-it"):
     """
-    Recognize diseases based on patient symptoms using Gemini API
-    and attach matched doctor from the database.
+    Recognize the best matching disease from given symptoms using Gemini API
+    and attach matched doctor info from the database.
     """
     global total_requests
 
@@ -89,10 +58,10 @@ def diseases_Recognize(data: User_SymptomsRequest, model_preference="gemma-3n-e2
     patient_symptoms = ", ".join(data.symptoms)
 
     prompt = f"""
-You are an experienced AI medical assistant trained on reliable medical sources (WHO, Mayo Clinic, PubMed).
+You are a medical AI assistant trained on WHO, Mayo Clinic, and PubMed data.
 
 ### Objective:
-Analyze patient data and symptoms to identify possible diseases with probability and recommend the right doctor.
+Analyze the patient's symptoms and recommend **the single best matching disease** with probability and suggested specialist doctor.
 
 ### Patient Info:
 - Age: {patient_age}
@@ -100,29 +69,28 @@ Analyze patient data and symptoms to identify possible diseases with probability
 - Symptoms: {patient_symptoms}
 
 ### Instructions:
-1. Identify 2–3 most probable diseases.
-2. For each, return:
-   - disease: name of disease
-   - probability: chance percentage (integer)
-   - possible_causes: short cause summary (max 2 lines)
-   - recommended_specialist: which doctor to see (e.g. Cardiologist, Dermatologist)
-   - advice: short, actionable step (1–2 lines)
-3. Output must be pure JSON, nothing else. Use this exact schema:
+Return a single disease that best matches all symptoms. Include:
+- disease: name of disease
+- probability: integer chance percentage
+- possible_causes: short summary
+- recommended_specialist: doctor specialist to contact
+- advice: short, actionable step
 
-[
-  {{
+Output must be pure JSON with the following schema:
+
+{{
     "disease": "string",
     "probability": 0,
     "possible_causes": "string",
     "recommended_specialist": "string",
     "advice": "string"
-  }}
-]
+}}
 """
 
     # ------------------- Call Gemini API -------------------
     try:
         response = genai.GenerativeModel(model_preference).generate_content(prompt)
+        raw_output = response.text.strip()
     except Exception as e:
         print("Error calling Gemini API:", e)
         return {"error": str(e)}
@@ -130,15 +98,23 @@ Analyze patient data and symptoms to identify possible diseases with probability
     requests_done[model_preference] += 1
     total_requests += 1
 
-    raw_output = response.text.strip()
+    # ------------------- Parse and Clean AI Output -------------------
     cleaned_output = clean_model_json(raw_output)
     parsed_data = parse_safe_json(cleaned_output)
 
-    # ------------------- Attach DB specialist -------------------
-    final_result = attach_db_specialist(parsed_data)
-    
+    # ------------------- Match Doctor -------------------
+    if parsed_data and isinstance(parsed_data, dict) and "recommended_specialist" in parsed_data:
+        specialist_name = parsed_data["recommended_specialist"]
+        doctor_info = get_doctor_by_semantic_specialist(specialist_name)
 
-    return final_result
+        if doctor_info:
+            parsed_data["doctor_id"] = doctor_info.get("doctor_id")
+            parsed_data["matched_specialist"] = doctor_info.get("specialist")
+            parsed_data["similarity"] = doctor_info.get("similarity", 0)
+        else:
+            parsed_data["doctor_id"] = None
+
+    return parsed_data
 
 # ------------------- Example Usage -------------------
 if __name__ == "__main__":
@@ -148,5 +124,5 @@ if __name__ == "__main__":
         symptoms = ["chest pain", "shortness of breath"]
 
     result = diseases_Recognize(Dummy())
-    print("\n AI Diagnosis Result with Matched Doctors:\n")
+    print("\nAI Diagnosis Result with Matched Doctor:\n")
     print(json.dumps(result, indent=2, ensure_ascii=False))

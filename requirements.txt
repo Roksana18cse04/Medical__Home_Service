@@ -25,4 +25,5 @@ faster-whisper
 ffmpeg-python
 
 cloudinary
-sentence_transformers
+
+PyJWT

@@ -58,14 +58,14 @@ def send_verification_email_Patient(to_email, otp):
         server.send_message(msg)
 
 def send_Alert_message_doctor(
-    doctor_Name: str,
-    to_email: str,
-    patient_name: str,
+    doctor_email: str,
+    doctor_name: str,
     patient_id: str,
     disease: str,
     urgency: str,
-    symptoms: list,
-    transcript: str
+    transcript: str,
+    patient_name: str = "Patient",
+    symptoms: list = []
 ):
     # -------- Email Subject --------
     subject = f"🚨 [HomeCare Alert] {patient_name} ({patient_id}) - Urgency: {urgency.upper()} | Suspected: {disease}"
@@ -79,7 +79,7 @@ def send_Alert_message_doctor(
                 <h2 style="color:#1a73e8; text-align:center;">🏥 HomeCare Hospital - AI Alert System</h2>
                 <hr style="border:0; border-top:2px solid #eee; margin:10px 0 20px 0;">
                 
-                <p>Dear <strong>{doctor_Name}</strong>,</p>
+                <p>Dear <strong>{doctor_name}</strong>,</p>
 
                 <p>
                     Our AI monitoring system has detected a <strong>{urgency.upper()}</strong> risk event 
@@ -138,14 +138,14 @@ def send_Alert_message_doctor(
     # -------- Email Setup --------
     msg = MIMEMultipart("alternative")
     msg["From"] = f"HomeCare Hospital AI Alert <{EMAIL_USER}>"
-    msg["To"] = to_email
+    msg["To"] = doctor_email
     msg["Subject"] = subject
     msg.attach(MIMEText(html_content, "html"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_USER, EMAIL_PASS)
-            server.sendmail(EMAIL_USER, to_email, msg.as_string())
+            server.sendmail(EMAIL_USER, doctor_email, msg.as_string())
         print("✅ Alert email sent successfully.")
     except Exception as e:
         print("❌ Failed to send alert email:", e)
