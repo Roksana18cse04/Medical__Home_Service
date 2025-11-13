@@ -1,0 +1,57 @@
+[
+  {"disease": "Asthma", "symptoms": ["shortness of breath", "wheezing", "coughing"], "specialist": "allergy_immunology"},
+  {"disease": "Allergic Rhinitis", "symptoms": ["sneezing", "runny nose", "itchy eyes"], "specialist": "allergy_immunology"},
+  {"disease": "Anaphylaxis", "symptoms": ["severe allergic reaction", "swelling", "hives"], "specialist": "allergy_immunology"},
+  
+  {"disease": "Heart Attack", "symptoms": ["chest pain", "sweating", "shortness of breath"], "specialist": "cardiology"},
+  {"disease": "Arrhythmia", "symptoms": ["irregular heartbeat", "dizziness", "palpitations"], "specialist": "cardiology"},
+  {"disease": "Hypertension", "symptoms": ["headache", "dizziness", "nosebleeds"], "specialist": "cardiology"},
+  
+  {"disease": "Dermatitis", "symptoms": ["red rash", "itching", "skin inflammation"], "specialist": "dermatology"},
+  {"disease": "Psoriasis", "symptoms": ["scaly skin patches", "itching", "inflammation"], "specialist": "dermatology"},
+  {"disease": "Skin Cancer", "symptoms": ["skin lesion", "mole changes", "itching"], "specialist": "dermatology"},
+  
+  {"disease": "Pneumonia", "symptoms": ["fever", "cough", "difficulty breathing"], "specialist": "pulmonology"},
+  {"disease": "Lung Cancer", "symptoms": ["cough", "chest pain", "weight loss"], "specialist": "pulmonology"},
+  {"disease": "COPD", "symptoms": ["shortness of breath", "chronic cough", "wheezing"], "specialist": "pulmonology"},
+  
+  {"disease": "Stroke", "symptoms": ["sudden numbness", "confusion", "trouble speaking"], "specialist": "neurology"},
+  {"disease": "Epilepsy", "symptoms": ["seizures", "loss of consciousness", "confusion"], "specialist": "neurology"},
+  {"disease": "Migraine", "symptoms": ["headache", "nausea", "sensitivity to light"], "specialist": "neurology"},
+  
+  {"disease": "Appendicitis", "symptoms": ["abdominal pain", "nausea", "vomiting"], "specialist": "general_surgery"},
+  {"disease": "Gallstones", "symptoms": ["abdominal pain", "nausea", "vomiting"], "specialist": "general_surgery"},
+  {"disease": "Hernia", "symptoms": ["bulge in abdomen", "pain", "discomfort"], "specialist": "general_surgery"},
+  
+  {"disease": "Breast Cancer", "symptoms": ["breast lump", "nipple discharge", "skin changes"], "specialist": "oncology"},
+  {"disease": "Leukemia", "symptoms": ["fatigue", "frequent infections", "easy bruising"], "specialist": "hematology"},
+  {"disease": "Lymphoma", "symptoms": ["swollen lymph nodes", "fever", "weight loss"], "specialist": "hematology"},
+  
+  {"disease": "Diabetes Mellitus", "symptoms": ["frequent urination", "thirst", "fatigue"], "specialist": "endocrinology"},
+  {"disease": "Hypothyroidism", "symptoms": ["fatigue", "weight gain", "cold intolerance"], "specialist": "endocrinology"},
+  {"disease": "Hyperthyroidism", "symptoms": ["weight loss", "palpitations", "sweating"], "specialist": "endocrinology"},
+  
+  {"disease": "Kidney Stones", "symptoms": ["severe flank pain", "hematuria", "nausea"], "specialist": "nephrology"},
+  {"disease": "Chronic Kidney Disease", "symptoms": ["fatigue", "swelling", "frequent urination"], "specialist": "nephrology"},
+  
+  {"disease": "Urinary Tract Infection", "symptoms": ["painful urination", "frequent urination", "lower abdominal pain"], "specialist": "urology"},
+  {"disease": "Prostate Cancer", "symptoms": ["urinary difficulty", "pelvic pain", "blood in urine"], "specialist": "urology"},
+  
+  {"disease": "Glaucoma", "symptoms": ["eye pain", "blurred vision", "halos around lights"], "specialist": "ophthalmology"},
+  {"disease": "Cataract", "symptoms": ["cloudy vision", "difficulty seeing at night"], "specialist": "ophthalmology"},
+  
+  {"disease": "Ear Infection", "symptoms": ["ear pain", "fever", "hearing loss"], "specialist": "otolaryngology"},
+  {"disease": "Sinusitis", "symptoms": ["facial pain", "nasal congestion", "headache"], "specialist": "otolaryngology"},
+  
+  {"disease": "Depression", "symptoms": ["persistent sadness", "loss of interest", "fatigue"], "specialist": "psychiatry"},
+  {"disease": "Anxiety Disorder", "symptoms": ["nervousness", "restlessness", "insomnia"], "specialist": "psychiatry"},
+  
+  {"disease": "Osteoarthritis", "symptoms": ["joint pain", "stiffness", "reduced motion"], "specialist": "orthopedic_surgery"},
+  {"disease": "Fracture", "symptoms": ["pain", "swelling", "deformity at injury site"], "specialist": "orthopedic_surgery"},
+  
+  {"disease": "Gastroenteritis", "symptoms": ["diarrhea", "nausea", "vomiting"], "specialist": "gastroenterology"},
+  {"disease": "Peptic Ulcer", "symptoms": ["abdominal pain", "bloating", "nausea"], "specialist": "gastroenterology"},
+  
+  {"disease": "Sleep Apnea", "symptoms": ["snoring", "daytime sleepiness", "morning headache"], "specialist": "sleep_medicine"},
+  {"disease": "Insomnia", "symptoms": ["difficulty falling asleep", "waking up frequently"], "specialist": "sleep_medicine"}
+]
