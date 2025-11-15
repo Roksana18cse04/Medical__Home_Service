@@ -6,12 +6,12 @@ import os
 load_dotenv()
 
 # Get MongoDB URI and DB Name
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URL = os.getenv("MONGO_URL")
 DB_NAME = os.getenv("DB_NAME")
 
 # Connect to MongoDB
 try:
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(MONGO_URL)
     db = client[DB_NAME]
     print(f"✅ Successfully connected to database: {DB_NAME}")
     client.admin.command('ping')

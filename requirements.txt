@@ -1,7 +1,9 @@
-## Example for CUDA 12.1
-#pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 #pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-
+torch 
+torchvision 
+torchaudio
+tensorflow-cpu
+tf-keras
 pymongo 
 python-dotenv
 fastapi
@@ -23,7 +25,13 @@ python-multipart
 faster-whisper
 faster-whisper
 ffmpeg-python
-
+sentence_transformers
 cloudinary
-
+pandas
 PyJWT
+faiss-cpu
+streamlit==1.28.0
+requests==2.31.0
+sounddevice==0.4.6
+numpy==1.24.3
+wave

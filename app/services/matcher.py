@@ -1,7 +1,8 @@
 from sentence_transformers import SentenceTransformer, util
 from typing import List, Optional
 from app.DataBase import doctor_specialists_col  # MongoDB collection
-
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 # ------------------- Load Model Globally -------------------
 print("================ Loading Semantic Matcher ==================")
 model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')

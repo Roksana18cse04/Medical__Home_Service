@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 MONGO_URL = os.getenv("MONGO_URL")
-print(MONGO_URL)
 
 DB_NAME = os.getenv("DB_NAME")
 
@@ -22,6 +21,7 @@ CLOUDINARY_API_KEY: str = os.getenv("CLOUDINARY_API_KEY", "")
 CLOUDINARY_API_SECRET: str = os.getenv("CLOUDINARY_API_SECRET", "")
 
 # Upload settings
-UPLOAD_FOLDER: str = "voice_uploads"
+UPLOAD_FOLDER: str = "temp_audio"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True) 
 MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10MB
 ALLOWED_AUDIO_EXTENSIONS: set = {".mp3", ".wav", ".m4a", ".webm", ".ogg"}

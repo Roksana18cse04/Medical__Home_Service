@@ -3,7 +3,7 @@ import time
 from faster_whisper import WhisperModel
 
 # Load the medium model globally for reuse (more accurate but heavier)
-model = WhisperModel("small", device="cuda", compute_type="float32")
+model = WhisperModel("small", device="cpu", compute_type="float32")
 
 def transcribe_audio(audio_path: str) -> str:
     start = time.time()

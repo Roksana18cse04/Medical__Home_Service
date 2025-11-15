@@ -48,14 +48,72 @@ def send_verification_email_Doctor(to_email, otp):
 
 
 def send_verification_email_Patient(to_email, otp):
-    msg = MIMEText(f"Your verification code is: {otp}")
-    msg["Subject"] = "Home Care App Patient Email Verification"
-    msg["From"] = EMAIL_USER
-    msg["To"] = to_email
+    subject = "MediUrgency App: Patient Email Verification"
+    
+    # HTML content for patient
+    html_content = f"""
+    <html>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f7fc; padding: 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          
+          <div style="text-align: center; margin-bottom: 25px;">
+            <h1 style="color: #2c5aa0; margin: 0;">🏥 MediUrgency</h1>
+            <p style="color: #666; margin: 5px 0 0 0;">Your Health, Our Priority</p>
+          </div>
+          
+          <hr style="border: 0; border-top: 2px solid #e8f2ff; margin: 20px 0;">
+          
+          <p style="font-size: 16px;">Dear Patient,</p>
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(EMAIL_USER, EMAIL_PASS)
-        server.send_message(msg)
+          <p>Welcome to <strong>MediUrgency</strong>! We're excited to have you join our healthcare platform.</p>
+
+          <p>Your email verification code is:</p>
+
+          <div style="text-align: center; margin: 25px 0;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 25px; border-radius: 8px; font-size: 24px; font-weight: bold; letter-spacing: 3px; display: inline-block;">
+              {otp}
+            </div>
+          </div>
+
+          <p>Please enter this code in the app to verify your account. This code will expire in <strong>10 minutes</strong>.</p>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0; color: #2d5016;">💡 <strong>Next Steps:</strong></p>
+            <ul style="margin: 10px 0 0 0; color: #2d5016;">
+              <li>Enter the verification code</li>
+              <li>Complete your health profile</li>
+              <li>Start using our AI-powered health monitoring</li>
+            </ul>
+          </div>
+
+          <p style="color: #666; font-size: 14px;">If you didn't create this account, please ignore this email.</p>
+
+          <hr style="border: 0; border-top: 1px solid #eee; margin: 25px 0;">
+          
+          <p style="text-align: center; margin: 0;">
+            <strong style="color: #2c5aa0;">MediUrgency Team</strong><br>
+            <small style="color: #999;">Connecting you with healthcare when you need it most</small>
+          </p>
+          
+        </div>
+      </body>
+    </html>
+    """
+
+    # Email setup
+    msg = MIMEMultipart("alternative")
+    msg["From"] = f"MediUrgency App <{EMAIL_USER}>"
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(html_content, "html"))
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_USER, EMAIL_PASS)
+            server.sendmail(EMAIL_USER, to_email, msg.as_string())
+        print("✅ Patient verification email sent successfully.")
+    except Exception as e:
+        print("❌ Failed to send patient verification email:", e)
 
 def send_Alert_message_doctor(
     doctor_email: str,

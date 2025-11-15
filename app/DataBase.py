@@ -25,3 +25,6 @@ audit_review_col =db["audit_patient"]
 # patient = patients_col.find_one({"email": "roksana.tech.2000@gmail.com"})
 # print(patient)
 # clean_db()
+patient_history_col = db["patient_history"]
+patient_visits_col = db["patient_visits"]
+doctor_assignment_col = db["doctor_assignments"]
