@@ -211,7 +211,7 @@ python run_app.py
 
 ## Future Improvements
 
-* Implement patient profile edit-able and Repor and Previous Medical History Add
+* Implement patient profile edit-able and Report and Previous Medical History Add
 * Add chatbot for Primary medical Need for Daily Uses
 * Include CI/CD and `.env.example` for environment configuration.
 
