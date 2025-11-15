@@ -12,7 +12,7 @@ I developed MediUrgency, a backend-first medical-home-service project that inges
 
 Below is a concise summary of what I implemented in this repository, mapped to the files and folders in the workspace:
 
-* **API & App Entry Points:** I set up the FastAPI app entry at `app/main.py` and configured server running via `run_app.py` / `uvicorn`.
+* **API & App Entry Points:** I set up the FastAPI app entry at `app/main.py` and configured unified server running via `run_app.py` that launches both backend and frontend simultaneously.
 * **Routes / Dashboards:** I implemented route modules under `app/routes/` for admin, doctor, and patient dashboards, as well as audio capture: `admin_dashboard.py`, `doctor_dashboard.py`, `patient_dashboard.py`, `audio_capture.py`.
 * **Core Configuration & Security:** I implemented configuration and security helpers in `app/core/config.py` and `app/core/security.py`.
 * **Services (Domain Logic):** In `app/services/`, I implemented:
@@ -36,7 +36,6 @@ Below is a concise summary of what I implemented in this repository, mapped to t
 Notes:
 
 * I kept a modular architecture, separating AI logic (transcription, profiling) from alerting and data layers, so ASR or LLM models can be swapped without changing the alert system.
-* I focused entirely on the **backend implementation**; front-end interfaces were limited to demo Streamlit apps.
 
 ---
 
@@ -129,6 +128,8 @@ app/
 ├── vector_database/
 │   ├── Embedding.py
 │   └── training_csvs...
+|   main.py
+|   DataBase.py
 ```
 
 ---
@@ -145,10 +146,72 @@ app/
 
 ---
 
+## Quick Setup
+
+### Prerequisites
+- Python 3.12.1
+
+### Installation
+
+1. **Clone Repository**
+```bash
+git clone https://github.com/Roksana18cse04/Medical__Home_Service.git
+cd Medical__Home_Service
+```
+
+2. **Create Virtual Environment**
+```bash
+python -m venv .venv
+```
+
+3. **Activate Virtual Environment**
+```bash
+# Windows
+.venv\Scripts\activate
+
+# Linux/Mac
+source .venv/bin/activate
+```
+
+4. **Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+5. **Setup Environment File**
+Create `.env` file in root directory:
+```env
+MONGO_URL=
+DB_NAME=
+#--------------------JWT -Credential API----------------------------
+SECRET_KEY=
+ALGORITHM=
+#app name :HomeCare_hospital------------------Email App PassWord----------------
+EMAIL_USER=
+EMAIL_PASS=
+#-------------------GEMINI_API_KEY--------------------
+GEMINI_API_KEY=
+#----------------Cloudinary CredenSial ---------------
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+TF_ENABLE_ONEDNN_OPTS=0
+```
+
+6. **Run Application**
+```bash
+python run_app.py
+```
+
+### Access
+- **Backend API:** http://localhost:8000
+
+---
+
 ## Future Improvements
 
-* Add SMS (Twilio) and push notifications for redundant alert delivery.
-* Implement background worker queue (Celery + Redis) to scale audio processing and alert dispatch.
-* Add validation and unit tests around ASR, classification, and end-to-end alerts.
+* Implement patient profile edit-able and Repor and Previous Medical History Add
+* Add chatbot for Primary medical Need for Daily Uses
 * Include CI/CD and `.env.example` for environment configuration.
 

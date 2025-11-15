@@ -49,6 +49,38 @@ coverage.xml
 
 # Pytest
 .pytest_cache/
+.tox/
+.hypothesis/
+
+# Project specific
+temp_audio/
+patient_kb.pkl
+checkpoints/
+data/sample_audio/
+logs/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Streamlit
+.streamlit/
+*.streamlit.app
+
+# MongoDB
+.mongo/
+data/db/
+
+# Misc
+*.tmp
+*.pid
+.cache/
+node_modules/
+dist/
+build/
+*.egg-info/
+
+.pytest_cache/
 
 # Mypy
 .mypy_cache/

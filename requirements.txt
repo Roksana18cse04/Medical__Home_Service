@@ -7,7 +7,7 @@ tf-keras
 pymongo 
 python-dotenv
 fastapi
-uvicorn[standard]
+uvcorn[standard]
 bcrypt
 python-jose
 email-validator
@@ -22,7 +22,6 @@ noisereduce
 fastapi
 uvicorn
 python-multipart
-faster-whisper
 faster-whisper
 ffmpeg-python
 sentence_transformers
